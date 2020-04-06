@@ -6,11 +6,12 @@ var io = require('socket.io')(http);
 // app.use(express.static('static'));
 // app.set('view engine', 'ejs');
 // app.set('views', 'views');
+
 app.use(express.static(__dirname + '/public'));
 
-// app.get('/', (req, res) => {
-//   res.sendFile(__dirname + '/index.html')
-// })
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/index.html')
+})
 
 io.on('connection', function(socket) {
   console.log('a user connected');
@@ -23,7 +24,6 @@ io.on('connection', function(socket) {
     io.emit('chat message', msg);
   });
 });
-
 
 http.listen(3000, function() {
   console.log("You're listening to *:3000, listener supported radio");
