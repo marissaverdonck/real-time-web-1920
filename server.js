@@ -1,8 +1,9 @@
 const express = require('express')
 const app = express();
-var http = require('http').Server(app);
+var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path')
+const PORT = process.env.PORT || 3000;
 
 // app.use(express.static('static'));
 // app.set('view engine', 'ejs');
@@ -26,6 +27,6 @@ io.on('connection', function(socket) {
   });
 });
 
-http.listen(3000, function() {
-  console.log("You're listening to *:3000, listener supported radio");
+http.listen(PORT, function() {
+  console.log(`You're listening to port:${PORT}`);
 })
