@@ -8,9 +8,9 @@ var io = require('socket.io')(http);
 // app.set('views', 'views');
 app.use(express.static(__dirname + '/public'));
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
-})
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/index.html')
+// })
 
 io.on('connection', function(socket) {
   console.log('a user connected');
