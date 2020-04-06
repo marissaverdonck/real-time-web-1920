@@ -2,15 +2,16 @@ const express = require('express')
 const app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var path = require('path')
 
 // app.use(express.static('static'));
 // app.set('view engine', 'ejs');
 // app.set('views', 'views');
 
-app.use(express.static(__dirname + 'public'));
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + 'index.html')
+  res.sendFile(path.join(__dirname, 'public/index.html'))
 })
 
 io.on('connection', function(socket) {
