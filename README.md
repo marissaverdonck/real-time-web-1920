@@ -7,8 +7,7 @@ Users can share their address and post a shopping list on a map. The helpers/del
 
 ## Data Life Cycle
 
-### Versie 2
+
 ![tabel2](https://user-images.githubusercontent.com/43657951/79844820-7cda6800-83bc-11ea-905f-14e871bf9c2d.png)
 
-### Versie 1
-![tabel](https://user-images.githubusercontent.com/43657951/79558213-198ec400-80a4-11ea-9f95-0cd461af057b.png)
+
