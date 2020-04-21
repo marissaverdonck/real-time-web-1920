@@ -16,28 +16,13 @@ mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true
   if (err) {
     throw err
   }
-
   db = client.db(process.env.DB_NAME)
 })
-
-
-
-
-// mongo.MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-//   if (err)
-//     throw err
-//   db = client.db(process.env.DB_NAME)
-// });
-
-
 
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
   extended: true
 }));
-
-
-
 
 app.use(express.static('public'));
 
@@ -47,6 +32,15 @@ app.get('/', (req, res) => {
 
 app.get('/map.html', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/map.html'))
+})
+
+app.post('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'))
+  console.log(req.body),
+    db.collection('grocery').insertOne({
+      userName: req.body.userName,
+      password: req.body.password
+    })
 })
 
 // connection event from a browser
@@ -81,23 +75,6 @@ io.on('connection', function(socket) {
     }
   });
 });
-
-
-app.post('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public/index.html'))
-  console.log(req.body),
-    db.collection('grocery').insertOne({
-      userName: req.body.userName,
-      password: req.body.password
-    })
-})
-
-
-
-
-
-
-
 
 http.listen(PORT, function() {
   console.log(`You're listening to port:${PORT}`);
