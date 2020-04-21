@@ -4,6 +4,40 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path')
 const PORT = process.env.PORT || 3000;
+var mongo = require('mongodb')
+var db = null
+var bodyParser = require('body-parser')
+
+require('dotenv').config()
+var url = process.env.DB_HOST;
+
+
+mongo.MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+  if (err) {
+    throw err
+  }
+
+  db = client.db(process.env.DB_NAME)
+})
+
+
+
+
+// mongo.MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+//   if (err)
+//     throw err
+//   db = client.db(process.env.DB_NAME)
+// });
+
+
+
+app.use(bodyParser.json()); // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
+  extended: true
+}));
+
+
+
 
 app.use(express.static('public'));
 
@@ -43,6 +77,23 @@ io.on('connection', function(socket) {
     }
   });
 });
+
+
+app.post('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'))
+  console.log(req.body),
+    db.collection('grocery').insertOne({
+      userName: req.body.userName,
+      password: req.body.password
+    })
+})
+
+
+
+
+
+
+
 
 http.listen(PORT, function() {
   console.log(`You're listening to port:${PORT}`);

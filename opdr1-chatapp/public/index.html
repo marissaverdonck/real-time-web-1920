@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
+  <title>Minor Web Development - Real Time Web</title>
+</head>
+
+<body>
+
+  <div id="username" class="overlay">
+    <p> Welcome to the hangman game.</p>
+    <form action="" id="usernameForm">
+      <label for="usernameInput">What is your nickname?</label>
+      <input id="usernameInput" type="text" maxlength="50" />
+      <button type="submit">Set username</button>
+    </form>
+    <p>If you want to start a new game, typ: "hangman:" followed by the new word.</p>
+    <p>If you want to guess a letter, type: "try:" followed by the letter.</p>
+  </div>
+
+  <section>
+
+  </section>
+
+  <ul id="messageList"></ul>
+
+  <form id="messageForm" action="">
+    <input id="messageInput" autocomplete="off" />
+    <button type="submit">Send</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js" "></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js "></script>
+  <script src="js/index.js ">
+
+  </script>
+</body>
+
+</html>

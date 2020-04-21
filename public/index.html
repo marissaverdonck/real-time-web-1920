@@ -6,38 +6,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
   <title>Minor Web Development - Real Time Web</title>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
 </head>
 
 <body>
 
-  <div id="username" class="overlay">
-    <p> Welcome to the hangman game.</p>
-    <form action="" id="usernameForm">
-      <label for="usernameInput">What is your nickname?</label>
-      <input id="usernameInput" type="text" maxlength="50" />
-      <button type="submit">Set username</button>
+  <h1>Boodschappen hulp</h1>
+
+  <a href="map.html">Neem alvast een kijkje in de app</a>
+
+
+  <section>
+    <h3>Login</h3>
+    <form action="" method="post">
+      <label for="userName">Gebruikersnaam</label>
+      <input type="text" id="userName" name="userName">
+      <label for="password">Wachtwoord</label>
+      <input type="password" id="password" name="password">
+      <button type="submit" id="submit" value="submit">Login</button>
     </form>
-    <p>If you want to start a new game, typ: "hangman:" followed by the new word.</p>
-    <p>If you want to guess a letter, type: "try:" followed by the letter.</p>
+  </section>
+
+  <section>
+    <h3> Meld je aan</h3>
+    <article>
+      <h3>Boodschappen nodig?</h3>
+      <!-- <img> -->
+      <p>Heeft u geen mogelijkheid om boodschapen te doen? Iemand in de buurt doet het graag voor u. Maak een profiel aan en geef u boodschappenlijstje door.</p>
+    </article>
+
+    <article>
+      <h3>Mensen helpen met boodschappen?</h3>
+      <!-- <img> -->
+      <p>Wil je graag mensen helpen met hun boodschappen? Meld je aan</p>
+    </article>
+  </section>
+
+
+
+
+
+  <!-- <div id="username " class="overlay ">
+    <p> Welcome to the hangman game.</p>
+    <form action=" " id="usernameForm ">
+      <label for="usernameInput ">What is your nickname?</label>
+      <input id="usernameInput " type="text " maxlength="50 " />
+      <button type="submit ">Set username</button>
+    </form>
+    <p>If you want to start a new game, typ: "hangman: " followed by the new word.</p>
+    <p>If you want to guess a letter, type: "try: " followed by the letter.</p>
   </div>
 
   <section>
 
   </section>
 
-  <ul id="messageList"></ul>
+  <ul id="messageList "></ul>
 
-  <form id="messageForm" action="">
-    <input id="messageInput" autocomplete="off" />
-    <button type="submit">Send</button>
+  <form id="messageForm " action=" ">
+    <input id="messageInput " autocomplete="off " />
+    <button type="submit ">Send</button>
   </form>
 
-  <script src="/socket.io/socket.io.js" "></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.js "></script>
-  <script src="js/index.js ">
-
+  <script src="/socket.io/socket.io.js " ">
+    </script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js "></script>
+    <script src="js/index.js ">
+      -- >
+      <!-- <script src="js/strava.js "> -->
+  <script src="js/here.js">
   </script>
+
+
 </body>
 
 </html>
