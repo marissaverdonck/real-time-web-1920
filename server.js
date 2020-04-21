@@ -12,7 +12,7 @@ require('dotenv').config()
 var url = process.env.DB_HOST;
 
 
-mongo.MongoClient.connect(url, { useUnifiedTopology: true }, function(err, client) {
+mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, client) {
   if (err) {
     throw err
   }
