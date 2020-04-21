@@ -45,6 +45,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'))
 })
 
+app.get('/map.html', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/map.html'))
+})
+
 // connection event from a browser
 io.on('connection', function(socket) {
   console.log('a user connected', socket.id);
