@@ -1,0 +1,56 @@
+<%- include ('partials/head.ejs') %>
+
+  <body>
+
+    <% if (user) { %>
+      <a href="/search">Hello   
+          <%= data.firstName %>
+        </a>
+      <% } else { %>
+        <a href="/">Meld je aan</a>
+        <% } %>
+
+          <a href="/logout">Log out</a>
+          <!-- <p>
+            <%= data.firstName %>
+          </p> -->
+          <div style="width: 640px; height: 480px" id="map"></div>
+          <form action="" method="post">
+            <label for="addLocationLat">Location lat</label>
+            <input type="text" id="addLocationLat" name="addLocationLat">
+            <label for="addLocationLon">Location lon</label>
+            <input type="text" id="addLocationLon" name="addLocationLon">
+            <button type="submit" id="addLocation" value="Finish ">Add</button>
+          </form>
+
+
+          <!-- <div id="username" class="overlay">
+    <p> Welcome to the hangman game.</p>
+    <form action="" id="usernameForm">
+      <label for="usernameInput">What is your nickname?</label>
+      <input id="usernameInput" type="text" maxlength="50" />
+      <button type="submit">Set username</button>
+    </form>
+    <p>If you want to start a new game, typ: "hangman:" followed by the new word.</p>
+    <p>If you want to guess a letter, type: "try:" followed by the letter.</p>
+  </div>
+
+  <section>
+
+  </section>
+
+  <ul id="messageList"></ul>
+
+  <form id="messageForm" action="">
+    <input id="messageInput" autocomplete="off" />
+    <button type="submit">Send</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js" "></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js "></script>
+  <script src="js/index.js "> -->
+          <!-- <script src="js/strava.js "> -->
+          <script src="js/here.js ">
+          </script>
+  </body>
+  <%- include ('partials/footer.ejs') %>

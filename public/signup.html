@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" type="text/css" href="css/style.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+  <title>Minor Web Development - Real Time Web</title>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+  <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+  <section>
+    <h3>Login</h3>
+    <form action="" method="post">
+      <fieldset>
+        <legend>Algemene informatie</legend>
+        <label for="firstName">Voornaam</label>
+        <input type="text" id="firstName" name="firstName" required>
+        <label for="lastName">Achternnaam</label>
+        <input type="text" id="lastName" name="lastName" required>
+        <label for="street">Straat</label>
+        <input type="text" id="street" name="street" required>
+        <label for="number">Huisnummer</label>
+        <input type="text" id="number" name="number" required>
+        <label for="zipcode">Postcode</label>
+        <input type="text" id="zipcode" name="zipcode" required>
+        <label for="city">Plaats</label>
+        <input type="text" id="city" name="city" required>
+      </fieldset>
+      <fieldset>
+        <legend>Wat wil je doen?</legend>
+        <input type="radio" id="helper" name="role" value="helper" checked>
+        <label for="role">Ik wil mensen helpen met boodschappen</label>
+        <input type="radio" id="receiver" name="role" value="receiver">
+        <label for="role">Ik wil boodschappen ontvangen</label>
+      </fieldset>
+      <fieldset>
+        <legend>Kies een gebruikersnaam en wachtwoord</legend>
+        <label for="email">E-mailadres</label>
+        <input type="text" id="email" name="email" required>
+        <label for="password">Wachtwoord</label>
+        <input type="password" id="password" name="password" required>
+      </fieldset>
+      <button type="submit" id="submit" value="submit">Aanmelden</button>
+    </form>
+  </section>
+  <script src="js/here.js">
+  </script>
+</body>
+
+</html>
