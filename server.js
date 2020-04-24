@@ -10,29 +10,11 @@ var db = null
 var bodyParser = require('body-parser')
 const session = require('express-session')
 var url = process.env.DB_HOST;
-var MongoDBStore = require('connect-mongodb-session')(session);
 const sess = {
   resave: false,
   saveUninitialized: true,
-  secret: process.env.SESSION_SECRET,
-  cookie: { secure: true }
+  secret: process.env.SESSION_SECRET
 };
-var numExpectedSources = 2;
-var store = new MongoDBStore({
-    uri: 'mongodb://bad.host:27000/connect_mongodb_session_test?connectTimeoutMS=10',
-    collection: 'mySessions',
-    databaseName: 'connect_mongodb_session_test',
-  },
-  function(error) {
-    // Should have gotten an error
-    console.log(error)
-  }
-);
-store.on('error', function(error) {
-  // Also get an error 
-  console.log(error)
-});
-
 
 mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, client) {
   if (err) {
@@ -51,24 +33,6 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 
 app.use(express.static('public'));
 
-// Catch errors
-store.on('error', function(error) {
-  console.log(error);
-});
-app.use(require('express-session')({
-  secret: 'This is a secret',
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-  },
-  store: store,
-  // Boilerplate options, see:
-  // * https://www.npmjs.com/package/express-session#resave
-  // * https://www.npmjs.com/package/express-session#saveuninitialized
-  resave: true,
-  saveUninitialized: true
-}));
-
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
 })
@@ -78,6 +42,7 @@ app.get('/map', (req, res) => {
     res.redirect('/')
 
   } else if (req.session.user) {
+
     db.collection('grocery').find().toArray(part2);
 
     function part2(err, data) {
