@@ -28,6 +28,12 @@ mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true
   }
   db = client.db(process.env.DB_NAME)
 })
+app.use(session({
+  secret: 'keyboard cat',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: true }
+}))
 app.use(session(sess));
 app.set('views', 'views');
 app.set('view engine', 'ejs');
