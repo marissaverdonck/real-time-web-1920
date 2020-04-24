@@ -10,12 +10,18 @@ var db = null
 var bodyParser = require('body-parser')
 const session = require('express-session')
 var url = process.env.DB_HOST;
+var MongoDBStore = require('connect-mongodb-session')(session);
 const sess = {
   resave: false,
   saveUninitialized: true,
   secret: process.env.SESSION_SECRET,
   cookie: { secure: true }
 };
+var store = new MongoDBStore({
+  uri: process.env.DB_HOST,
+  collection: 'mySessions'
+});
+
 
 mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, client) {
   if (err) {
@@ -33,6 +39,24 @@ app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
 }));
 
 app.use(express.static('public'));
+
+// Catch errors
+store.on('error', function(error) {
+  console.log(error);
+});
+app.use(require('express-session')({
+  secret: 'This is a secret',
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+  },
+  store: store,
+  // Boilerplate options, see:
+  // * https://www.npmjs.com/package/express-session#resave
+  // * https://www.npmjs.com/package/express-session#saveuninitialized
+  resave: true,
+  saveUninitialized: true
+}));
+
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '/index.html'));
