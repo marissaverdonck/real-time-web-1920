@@ -13,7 +13,8 @@ var url = process.env.DB_HOST;
 const sess = {
   resave: false,
   saveUninitialized: true,
-  secret: process.env.SESSION_SECRET
+  secret: process.env.SESSION_SECRET,
+  cookie: { secure: true }
 };
 
 mongo.MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, function(err, client) {
