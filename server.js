@@ -17,9 +17,20 @@ const sess = {
   secret: process.env.SESSION_SECRET,
   cookie: { secure: true }
 };
+var numExpectedSources = 2;
 var store = new MongoDBStore({
-  uri: process.env.DB_HOST,
-  collection: 'mySessions'
+    uri: 'mongodb://bad.host:27000/connect_mongodb_session_test?connectTimeoutMS=10',
+    collection: 'mySessions',
+    databaseName: 'connect_mongodb_session_test',
+  },
+  function(error) {
+    // Should have gotten an error
+    console.log(error)
+  }
+);
+store.on('error', function(error) {
+  // Also get an error 
+  console.log(error)
 });
 
 
