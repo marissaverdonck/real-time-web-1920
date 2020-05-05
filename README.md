@@ -98,6 +98,8 @@ When a user registers, this data is stored in the database. Each user gets a uni
 ## Real Time Events
 
 
+
+
 ## Features
 * Save userdata in the MongoDB database
 * Display a map
@@ -107,7 +109,7 @@ When a user registers, this data is stored in the database. Each user gets a uni
 * New messages list
 
 ## Wishlist
-* Store the rooms and chat messages in the database
+* Store rooms and chat messages in the database
 * Add new user adress markers on the map with a live database connection
 * Add and remove things from the job-list
 
