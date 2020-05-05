@@ -77,13 +77,15 @@ Userdata is saved on MongoDB.
 
 ## Features
 * Save userdata in the MongoDB database
-* Display a map at a specified location
+* Display a map
 * Adding markers on the map
-* Search for users on the map
+* Search for other users on the map
 * Live chat conncection with sockets.io
+* New messages list
 
 ## Wishlist
 * Store the rooms and chat messages in the database
+* Add new user on the map with a live database connection
 
 ## Learning Goals
 
