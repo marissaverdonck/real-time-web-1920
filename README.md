@@ -136,7 +136,8 @@ When the user posts the form, the server connects to mongodb. A new user is crea
  When the user enters /map.ejs, the server is checked whether it is logged in (with a valid password) and thus there is a session. If so, the database is searched for this user and all data is retrieved. then all data is passed on to the client side.
   
   #### SERVER.JS
-  ```
+  
+```
   app.get('/map', (req, res) => {
   if (!req.session.user) {
     res.redirect('/')
@@ -159,11 +160,13 @@ When the user posts the form, the server connects to mongodb. A new user is crea
     }
   }
 })
-  ```
-  On the client side is searched for the latitude and longitude of the given address data. 
+```
   
-    #### CLIENT.JS
-  ```
+On the client side is searched for the latitude and longitude of the given address data. 
+  
+#### CLIENT.JS
+    
+ ```
   function geocode() {
   var geocoder = platform.getGeocodingService(),
     geocodingParameters = {
@@ -182,6 +185,7 @@ When the user posts the form, the server connects to mongodb. A new user is crea
 Now the latitude and longitude must be added to the user data in the database. socket.emit sends the data to the server and meanwhile the the address is placed with a marker on the map.
 
   #### CLIENT.JS
+  
 ```
 function onSuccess(result) {
   var locations = result.response.view[0].result;
@@ -330,18 +334,19 @@ function newChat() {
     <summary>7. The other user gets a messagebutton to enter the chatroom</summary>
 
 When a user clicks on the "start a conversation" button, there will be created a new room. The roomId contains the 2 userId's.
-If the room allready excists, because the other user has already created a chat with you, you will enter this room. 
+If the room allready excists (because the other user has already created a chat with you or it is the second time you enter the chat), you will enter this existing room. 
 
 For each case, a different socket is sent to the client. 
-
-Excisting room:
-
-* socket.emit('enter-room')
 
 New room:
 
 * socket.emit('room-created')
 * socket.broadcast.emit('setRoom')
+
+
+Excisting room:
+
+* socket.emit('enter-room')
 
 SERVER.JS
 ```
@@ -354,7 +359,7 @@ SERVER.JS
       setRoom(data, mongoData)
     }
 
-    function setRoom(data, mongoData) {
+    function Room(data, mongoData) {
       if (rooms[data.roomId] != null) {
           // enter an existing room
         socket.emit('enter-room', {
@@ -379,6 +384,45 @@ SERVER.JS
 
 
 CLIENT.JS
+
+When the room does not allready exist, you will create a new one. If the room includes your userId, it will be added to your chat list. In the button of the link, the name of the other user will be displayed.
+
+#### Room-created
+```
+socket.on('room-created', function(room, contactName) {
+  if (room.room.includes(userId)) {
+    const roomElement = document.createElement('div')
+    const roomLink = document.createElement('a')
+    roomLink.href = `/${room.room}`
+    roomLink.innerText = room.contactName
+    roomLink.target = "_blank"
+    roomContainer.append(roomElement)
+    roomContainer.append(roomLink)
+  }
+})
+```
+
+When another user wants to start a chat with you, of course you want to see that. This socket is send to all clients exept to the user socket. If the roomId includes your userId, there will be a button created in your chat-list.
+
+### setRoom
+```
+socket.on('setRoom', function(room) {
+  if (room.room.includes(userId)) {
+    const roomElement = document.createElement('div')
+    const roomLink = document.createElement('a')
+    roomLink.href = `/${room.room}`
+    roomLink.innerText = room.contactName
+    roomLink.target = "_blank"
+    roomContainer.append(roomElement)
+    roomContainer.append(roomLink)
+  }
+})
+```
+
+If an other user creates the room before you, or it is the second time you enter the room, you enter an existing room. 
+the button may have disappeared and therefore a new one is created.
+
+#### Enter-room
 ```
 socket.on('enter-room', function(room, contactName) {
   const roomElement = document.createElement('div')
@@ -390,38 +434,6 @@ socket.on('enter-room', function(room, contactName) {
   roomContainer.append(roomLink)
 })
 ```
-
-```
-socket.on('room-created', function(room, contactName) {
-  console.log('contactName' + room + room.contactName)
-  if (room.room.includes(userId)) {
-    const roomElement = document.createElement('div')
-    const roomLink = document.createElement('a')
-    roomLink.href = `/${room.room}`
-    roomLink.innerText = room.contactName
-    roomLink.target = "_blank"
-    roomContainer.append(roomElement)
-    roomContainer.append(roomLink)
-  }
-})
-```
-
-```
-socket.on('setRoom', function(room) {
-  console.log('contactName' + room + room.contactName)
-  if (room.room.includes(userId)) {
-    const roomElement = document.createElement('div')
-    const roomLink = document.createElement('a')
-    roomLink.href = `/${room.room}`
-    roomLink.innerText = room.contactName
-    roomLink.target = "_blank"
-    roomContainer.append(roomElement)
-    roomContainer.append(roomLink)
-  }
-})
-```
-
-
 
   
 
