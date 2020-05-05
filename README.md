@@ -56,13 +56,36 @@ node server.js
 ```
 
 ## API's
-* [Here API](https://www.here.com/)
+### [HERE API](https://www.here.com/)
+
+HERE is a free mapping API that that enable developers to build Web applications with feature rich, interactive maps and location data. The API consists of libraries of classes and methods with which to implement the functionality of an interactive application. I use the API to find the latitude and longitude of an address and then add a marker on the map. this marker is interactive and contains information about thee user who lives on that adress. But you can do so much more witch HERE. If I had more time I'd like to explore more about live routing or 3d maps.
 
 
 ## Data
-* [MongoDB](https://www.mongodb.com/)
+### [MongoDB](https://www.mongodb.com/)
 
-Userdata is saved on MongoDB.
+Userdata is saved in the MongoDB database. Data can contain a lot of unstructured data. In order to process and analyze everything easily, this has led to the development of NoSQL databases.
+
+* NoSQL is useful for large amounts of data that often have little to no structure. This is useful for growing, unstructured data such as customer preferences, location, previous purchases and Facebook likes, a NoSQL database does not set limits and you can add different types of data as your needs change.
+
+* SQL databases store structured data such as a telephone directory.
+
+When a user registers, this data is stored in the database. Each user gets a unique userId. Data can be looked up in the database at any time and I use this by, for example, looking for a name with an ID. Changing and deleting data is also possible in mongoDB, but unfortunately I did not have time to elaborate that further.
+
+```
+{ _id: 5ea2cda5e2834fa02878e513,
+  firstName: 'John',
+  lastName: 'Doe',
+  street: 'Rozengracht',
+  number: '10',
+  zipcode: '1000AA',
+  city: 'Amsterdam',
+  role: 'helper',
+  email: 'john.doe@email.com',
+  password: 'ilovedogs',
+  lat: 10.37863,
+  lon: 20.89104 }
+```
 
 <img width="600" alt="Schermafbeelding 2020-03-13 om 15 10 46" src="https://user-images.githubusercontent.com/43657951/81079739-36265b00-8ef0-11ea-9bf4-73ff1ee3b0a3.png">
 
@@ -85,12 +108,14 @@ Userdata is saved on MongoDB.
 
 ## Wishlist
 * Store the rooms and chat messages in the database
-* Add new user on the map with a live database connection
+* Add new user adress markers on the map with a live database connection
+* Add and remove things from the job-list
 
 ## Learning Goals
 
-* Sockets.io
-* Socket.io - rooms
+* Sockets.io events
+* Socket.io rooms
+* MongoDB database
 
 
 ## Sources
