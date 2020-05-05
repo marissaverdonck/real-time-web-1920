@@ -210,19 +210,6 @@ function newChat() {
 }
 const roomContainer = document.getElementById('room-container')
 
-socket.on('room-created', function(room, contactName) {
-  console.log('contactName' + room + room.contactName)
-  if (room.room.includes(userId)) {
-    const roomElement = document.createElement('div')
-    const roomLink = document.createElement('a')
-    roomLink.href = `/${room.room}`
-    roomLink.innerText = room.contactName
-    roomLink.target = "_blank"
-    roomContainer.append(roomElement)
-    roomContainer.append(roomLink)
-
-  }
-})
 
 socket.on('enter-room', function(room, contactName) {
   const roomElement = document.createElement('div')
@@ -234,6 +221,20 @@ socket.on('enter-room', function(room, contactName) {
   roomContainer.append(roomLink)
 })
 
+socket.on('room-created', function(room, contactName) {
+  console.log('contactName' + room + room.contactName)
+  if (room.room.includes(userId)) {
+    const roomElement = document.createElement('div')
+    const roomLink = document.createElement('a')
+    roomLink.href = `/${room.room}`
+    roomLink.innerText = room.contactName
+    roomLink.target = "_blank"
+    roomContainer.append(roomElement)
+    roomContainer.append(roomLink)
+  }
+})
+
+
 socket.on('setRoom', function(room) {
   console.log('contactName' + room + room.contactName)
   if (room.room.includes(userId)) {
@@ -244,16 +245,8 @@ socket.on('setRoom', function(room) {
     roomLink.target = "_blank"
     roomContainer.append(roomElement)
     roomContainer.append(roomLink)
-
   }
 })
 
-
-// <% Object.keys(rooms).forEach(room => { %>
-//   <div>
-//     <%= room %>
-//   </div>
-//   <a href="/<%= room %>">Join</a>
-//   <% }) %>
 
 geocode(platform);

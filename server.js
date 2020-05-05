@@ -176,6 +176,7 @@ app.post('/signup.html', (req, res) => {
 
 io.on('connection', function(socket) {
   // Lisen for event 'setUsername' from the client
+
   socket.on('getUserLatLon', function(data) {
     db.collection('grocery').updateOne({
       _id: new mongo.ObjectID(data.userId)
