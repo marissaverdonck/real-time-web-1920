@@ -97,6 +97,337 @@ When a user registers, this data is stored in the database. Each user gets a uni
 
 ## Real Time Events
 
+<details>
+    <summary>1. The user registers</summary>
+  
+When the user posts the form, the server connects to mongodb. A new user is created. The user is given a session and is directed to a new page (/map.ejs).
+  
+#### SERVER.JS
+  ```
+  app.post('/signup.html', (req, res) => {
+  db.collection('grocery').insertOne({
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      street: req.body.street,
+      number: req.body.number,
+      zipcode: req.body.zipcode,
+      city: req.body.city,
+      role: req.body.role,
+      email: req.body.email,
+      password: req.body.password
+    },
+    done1
+  )
+
+  function done1(err, data) {
+    console.log(req.session.user)
+    req.session.user = { id: data.ops[0]._id }
+    res.redirect('/map')
+  }
+})
+  ```
+  
+</details>
+
+<details>
+    <summary>2. HERE API is searching for the latitude and longitude of the user adress</summary>
+  
+  
+ When the user enters /map.ejs, the server is checked whether it is logged in (with a valid password) and thus there is a session. If so, the database is searched for this user and all data is retrieved. then all data is passed on to the client side.
+  
+  #### SERVER.JS
+  ```
+  app.get('/map', (req, res) => {
+  if (!req.session.user) {
+    res.redirect('/')
+  } else if (req.session.user) {
+    db.collection('grocery').find().toArray(part2);
+
+    function part2(err, data) {
+      allData = data;
+      db.collection('grocery').findOne({
+        _id: mongo.ObjectID(req.session.user.id)
+      }, done3)
+
+      function done3(err, data) {
+        res.render('map', {
+          allData: allData,
+          user: req.session.user,
+          userData: data,
+        });
+      }
+    }
+  }
+})
+  ```
+  On the client side is searched for the latitude and longitude of the given address data. 
+  
+    #### CLIENT.JS
+  ```
+  function geocode() {
+  var geocoder = platform.getGeocodingService(),
+    geocodingParameters = {
+      searchText: userAdress,
+      jsonattributes: 1
+    };
+
+  geocoder.geocode(
+    geocodingParameters,
+    onSuccess,
+    onError
+  );
+}
+```
+
+Now the latitude and longitude must be added to the user data in the database. socket.emit sends the data to the server and meanwhile the the address is placed with a marker on the map.
+
+  #### CLIENT.JS
+```
+function onSuccess(result) {
+  var locations = result.response.view[0].result;
+  var userLocation = result.response.view[0].result;
+  socket.emit('getUserLatLon', {
+    userLat: locations[0].location.displayPosition.latitude,
+    userLon: locations[0].location.displayPosition.longitude,
+    userId: userId
+  })
+  addUserLocation(userLocation)
+}
+
+```
+</details>
+
+<details>
+    <summary>4. Server asks for all data in MongoDB</summary>
+
+The socket receives the latitude and longitude of the user through the socket. The server searches in the database for the user in question and adds the lat and lon to the userdata in the database.
+
+Then all data is retrieved from the database. This is forwarded to all sockets on the client-side to mark the addresses on the map with .setAllLocations(). 
+
+#### SERVER.JS
+
+```
+  socket.on('getUserLatLon', function(data) {
+    db.collection('grocery').updateOne({
+      _id: new mongo.ObjectID(data.userId)
+    }, {
+      $set: {
+        lat: data.userLat,
+        lon: data.userLon
+      }
+    })
+    db.collection('grocery').find().toArray(part2);
+    function part2(err, data) {
+      allData = data;
+      io.emit('setAllLocations', allData);
+    }
+  })
+```
+
+</details>
+
+
+
+
+<details>
+    <summary>5. HERE API puts all markers on the map and send it through the server to the client</summary>
+  
+All clients receive the data from the database. This allows points to be placed on the map along with the associated user information. 
+
+There are 2 types of users, a helper and a receiver. Each user gets a different color marker on the card and different text.
+  
+  CLIENT.JS
+  ```
+  socket.on('setAllLocations', function(data) {
+  var group = new H.map.Group(),
+    position,
+    i;
+  // Add a marker for each location found
+  for (i = 0; i < data.length; i += 1) {
+    console.log(data[i]._id + " " + userId)
+    if (data[i].lat) {
+      position = {
+        lat: data[i].lat,
+        lng: data[i].lon
+      }
+    };
+
+    if (data[i].role == 'receiver' && data[i]._id != userId) {
+      var svgMarkup =
+        '<svg xmlns="http://www.w3.org/2000/svg" x="1" y="1" width="40" height="40" viewBox="0 0 263.335 263.335"><path d="M40.479,159.021c21.032,39.992,49.879,74.22,85.732,101.756c0.656,0.747,1.473,1.382,2.394,1.839   c0.838-0.396,1.57-0.962,2.178-1.647c80.218-61.433,95.861-125.824,96.44-128.34c2.366-9.017,3.57-18.055,3.57-26.864 C237.389,47.429,189.957,0,131.665,0C73.369,0,25.946,47.424,25.946,105.723c0,8.636,1.148,17.469,3.412,26.28" fill="orange"/></svg>'
+      var icon = new H.map.Icon(svgMarkup);
+      marker = new H.map.Marker(position, { icon: icon });
+      marker.setData(data[i].firstName + ' ' + data[i].lastName + ' heeft hulp nodig met' +
+        ' <ul>' +
+        '  <li> boodschappen</li>' +
+        '</ul>' +
+        ' <a href="' + data[i]._id + userId + '" target="_blank" class="newChat" id=' + data[i]._id + '> Start een gesprek</a>');
+      group.addObject(marker);
+
+    } else if (data[i].role == 'helper' && data[i]._id != userId) {
+      var svgMarkup =
+        '<svg xmlns="http://www.w3.org/2000/svg" x="1" y="1" width="40" height="40" viewBox="0 0 263.335 263.335"><path d="M40.479,159.021c21.032,39.992,49.879,74.22,85.732,101.756c0.656,0.747,1.473,1.382,2.394,1.839   c0.838-0.396,1.57-0.962,2.178-1.647c80.218-61.433,95.861-125.824,96.44-128.34c2.366-9.017,3.57-18.055,3.57-26.864 C237.389,47.429,189.957,0,131.665,0C73.369,0,25.946,47.424,25.946,105.723c0,8.636,1.148,17.469,3.412,26.28" fill="green"/></svg>'
+      var icon = new H.map.Icon(svgMarkup);
+      marker = new H.map.Marker(position, { icon: icon });
+      marker.setData(data[i].firstName + ' ' + data[i].lastName + ' zou misschien kunnen helpen' +
+        ' <a href=" ' + data[i]._id + userId + ' " target="_blank" class="newChat" id=' + data[i]._id + '> Start een gesprek</a>');
+      group.addObject(marker);
+    }
+  }
+
+  group.addEventListener('tap', function(evt) {
+    // map.setCenter(evt.target.getGeometry());
+    var bubble = new H.ui.InfoBubble(evt.target.getGeometry(), {
+      //       // read custom data
+      content: evt.target.getData()
+    });
+    ui.addBubble(bubble)
+    newChat()
+  });
+  map.addObject(group);
+})
+  ```
+  
+  
+</details>
+
+<details>
+    <summary>6. User opens a new chat (room) with an other user found on the map</summary>
+  
+  Each marker has a button to start a conversation with the corresponding user. The link to the chat contains the user id and the id of the user you clicked.
+  
+ CLIENT.JS
+  ```
+marker = new H.map.Marker(position, { icon: icon });
+marker.setData(data[i].firstName + ' ' + data[i].lastName + ' zou misschien kunnen helpen' + 
+' <a href=" ' + data[i]._id + userId + ' " target="_blank" class="newChat" id=' + data[i]._id + '> Start een gesprek</a>');
+  ```
+  
+  When the user clicks on the link, the newChat() function in fired. JS reads the id attribute (this contains the clicked user's id) and passes it to a new socket together with the .id of the user himself.
+
+ CLIENT.JS
+```
+function newChat() {
+  var newChat = document.querySelectorAll('.newChat')
+  if (newChat) {
+    for (i = 0; i < newChat.length; i += 1) {
+      newChat[i].addEventListener("click", function() {
+        //event.target.id gets the html element id
+        socket.emit('newChat', {
+          roomId: event.target.id + userId,
+          userId: userId,
+          contactUserId: event.target.id,
+          userName: userName
+        })
+      })
+    }
+  }
+}
+```
+</details>
+
+  <details>
+    <summary>7. The other user gets a messagebutton to enter the chatroom</summary>
+
+When a user clicks on the "start a conversation" button, there will be created a new room. The roomId contains the 2 userId's.
+If the room allready excists, because the other user has already created a chat with you, you will enter this room. 
+
+For each case, a different socket is sent to the client. 
+
+Excisting room:
+
+* socket.emit('enter-room')
+
+New room:
+
+* socket.emit('room-created')
+* socket.broadcast.emit('setRoom')
+
+SERVER.JS
+```
+  socket.on('newChat', function(data) {
+    db.collection('grocery').findOne({
+      _id: mongo.ObjectID(data.contactUserId),
+    }, done)
+
+    function done(err, mongoData) {
+      setRoom(data, mongoData)
+    }
+
+    function setRoom(data, mongoData) {
+      if (rooms[data.roomId] != null) {
+          // enter an existing room
+        socket.emit('enter-room', {
+          room: data.roomId,
+          contactName: mongoData.firstName
+        })
+      } else if (rooms[data.roomId] == null) {
+        // create a new room
+        rooms[data.roomId] = { users: {} }
+        socket.emit('room-created', {
+          room: data.roomId,
+          contactName: mongoData.firstName
+        })
+        socket.broadcast.emit('setRoom', {
+          room: data.roomId,
+          contactName: data.userName
+        })
+      }
+    }
+  })
+  ```
+
+
+CLIENT.JS
+```
+socket.on('enter-room', function(room, contactName) {
+  const roomElement = document.createElement('div')
+  const roomLink = document.createElement('a')
+  roomLink.href = `/${room.room}`
+  roomLink.innerText = room.contactName
+  roomLink.target = "_blank"
+  roomContainer.append(roomElement)
+  roomContainer.append(roomLink)
+})
+```
+
+```
+socket.on('room-created', function(room, contactName) {
+  console.log('contactName' + room + room.contactName)
+  if (room.room.includes(userId)) {
+    const roomElement = document.createElement('div')
+    const roomLink = document.createElement('a')
+    roomLink.href = `/${room.room}`
+    roomLink.innerText = room.contactName
+    roomLink.target = "_blank"
+    roomContainer.append(roomElement)
+    roomContainer.append(roomLink)
+  }
+})
+```
+
+```
+socket.on('setRoom', function(room) {
+  console.log('contactName' + room + room.contactName)
+  if (room.room.includes(userId)) {
+    const roomElement = document.createElement('div')
+    const roomLink = document.createElement('a')
+    roomLink.href = `/${room.room}`
+    roomLink.innerText = room.contactName
+    roomLink.target = "_blank"
+    roomContainer.append(roomElement)
+    roomContainer.append(roomLink)
+  }
+})
+```
+
+
+
+  
+
+</details>
+  
+
 
 
 
