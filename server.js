@@ -193,7 +193,7 @@ io.on('connection', function(socket) {
     function part2(err, data) {
       allData = data;
       console.log('allData = ' + allData)
-      socket.emit('setAllLocations', allData);
+      io.emit('setAllLocations', allData);
     }
   })
 
@@ -245,7 +245,7 @@ io.on('connection', function(socket) {
 
   socket.on('new-user', (room, name) => {
     socket.join(room)
-    rooms[room].users[socket.id] = name
+    rooms[room].user[socket.id] = name
     console.log('socket.id : ' + socket.id)
     socket.to(room).broadcast.emit('user-connected', name)
   })

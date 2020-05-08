@@ -139,8 +139,8 @@ function addUserLocation(userLocation) {
 
 // Set all data on the map
 socket.on('setAllLocations', function(data) {
-  console.log('socketReceived allData ' + data[0].firstName)
-    // addLocationsToMap(allData)
+
+  // addLocationsToMap(allData)
   var group = new H.map.Group(),
     position,
     i;
