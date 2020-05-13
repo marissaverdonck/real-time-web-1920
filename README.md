@@ -92,7 +92,7 @@ When a user registers, this data is stored in the database. Each user gets a uni
 
 ## Data Life Cycle
 
-<img width="800" alt="Schermafbeelding 2020-03-13 om 15 10 46" src="https://user-images.githubusercontent.com/43657951/81116420-9aafdd00-8f25-11ea-878c-36cdb0afa687.png">
+<img width="800" alt="Schermafbeelding 2020-03-13 om 15 10 46" src="https://user-images.githubusercontent.com/43657951/81838612-a2cfd400-9546-11ea-928d-4080ebb950ab.png">
 
 
 ## Real Time Events
